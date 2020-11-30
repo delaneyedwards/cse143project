@@ -23,7 +23,21 @@ def enemy(x, y):
     #drawing the enemy image on the screen
     screen.blit(enemyImg, (x, y))
 
+bulletImg = pygame.image.load('bullet.png')
+enemyBulletX = 400
+enemyBulletY = 50
+enemyBulletY_change = 0.1
+
+delay = 500
+bullet_event = pygame.USEREVENT + 1
+pygame.time.set_timer(bullet_event, delay)
+
+def enemy_bullet(x,y):
+    screen.blit(bulletImg, (x,y))
+
+
 #game loop for window
+bullet = False
 running = True
 while running:
     #make background white
@@ -32,12 +46,19 @@ while running:
         #closing the window if red x is clicked
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == bullet_event:
+            enemyBulletX = enemyX
+            enemyBulletY += enemyBulletY_change
+            bullet = True;
+            
 
     if enemyX <= 0:
         enemyX_change = 0.1
     elif enemyX >= 736:
         enemyX_change = -0.1
 
+    if bullet:
+        enemy_bullet(enemyBulletX, enemyBulletY)
     enemyX += enemyX_change
     enemy(enemyX, enemyY)
     pygame.display.update()

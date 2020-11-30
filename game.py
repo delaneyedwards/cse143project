@@ -6,6 +6,22 @@ pygame.init()
 #create the screen with dimensions 800x600
 screen = pygame.display.set_mode((800, 600))
 
+#storing the dimensions of the screen
+width = screen.get_width()
+height = screen.get_height()
+
+#storing colors
+color_white = (255,255,255)
+color_black = (0,0,0)
+color_light = (175,175,175)
+color_dark = (100,100,100)
+
+#fonts and texts
+smallfont = pygame.font.SysFont('Corbel',35)
+text_quit = smallfont.render('Quit', True, color_light)
+text_play = smallfont.render("Play", True, color_light)
+text_options = smallfont.render("Options",True,color_light)
+
 #Title of display
 pygame.display.set_caption("Shooter Game")
 
@@ -39,17 +55,47 @@ def enemy_bullet(x,y):
 #game loop for window
 bullet = False
 running = True
+in_menu = True
+in_options = False
 while running:
     #make background white
     screen.fill((255,255,255))
+    #stores mouse position
+    mouse = pygame.mouse.get_pos()
     for event in pygame.event.get():
+
         #closing the window if red x is clicked
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == bullet_event:
+
+        #mouse interactions -- in progress
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            #mouse controls on the menu
+            if in_menu:
+                if width/3 <= mouse[0] <= width*2/3 and height*6/8 <= mouse[1] <= height*6/8 + 40:
+                    running = False
+                    pygame.quit()
+                if width/3 <= mouse[0] <= width*2/3 and height*4/8 <= mouse[1] <= height*4/8 + 40:
+                    in_options = True
+                if width/3 <= mouse[0] <= width*2/3 and height*4/8 <= mouse[1] <= height*4/8 + 40:
+                    in_menu = False
+        if event.type == bullet_event:
             enemyBulletX = enemyX
             enemyBulletY += enemyBulletY_change
             bullet = True;
+
+    #Drawing the menu if in the menu
+    if in_menu:
+        #drawing the buttons for the menu
+        #Quit button
+        pygame.draw.rect(screen,color_dark,[width/3,height*6/8,width/3,40])
+        screen.blit(text_quit,(width/2,height * 6/8))
+        #Options button
+        pygame.draw.rect(screen,color_dark,[width/3,height*5/8,width/3,40])
+        screen.blit(text_options,(width/2,height * 5/8))
+        #Play button
+        pygame.draw.rect(screen,color_dark,[width/3,height*4/8,width/3,40])
+        screen.blit(text_play,(width/2,height * 4/8))
             
 
     if enemyX <= 0:

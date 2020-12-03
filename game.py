@@ -150,40 +150,37 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        #mouse interactions -- in progress
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            #mouse controls on the menu
-            if in_menu:
-                if width/3 <= mouse[0] <= width*2/3 and height*6/8 <= mouse[1] <= height*6/8 + 40:
-                    running = False
-                    pygame.quit()
-                if width/3 <= mouse[0] <= width*2/3 and height*4/8 <= mouse[1] <= height*4/8 + 40:
-                    in_options = True
-                if width/3 <= mouse[0] <= width*2/3 and height*4/8 <= mouse[1] <= height*4/8 + 40:
-                    in_menu = False
         if event.type == bullet_event:
             enemyBulletX = enemyX
             enemyBulletY += enemyBulletY_change
-            bullet = True;
+            bullet = True
 
         # For Player Movement
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                playerXChange = -0.5
-            elif event.key == pygame.K_RIGHT:
-                playerXChange = 0.5
-            elif event.key == pygame.K_UP:
-                playerYChange = -0.5
-            elif event.key == pygame.K_DOWN:
-                playerYChange = 0.5
-            elif event.key == pygame.K_SPACE and bulletState is 'ready':
+                playerXChange += -0.5
+            if event.key == pygame.K_RIGHT:
+                playerXChange += 0.5
+            if event.key == pygame.K_UP:
+                playerYChange += -0.5
+            if event.key == pygame.K_DOWN:
+                playerYChange += 0.5
+            if event.key == pygame.K_SPACE and bulletState is 'ready':
                 bulletX = playerX
                 bulletY = playerY
                 fireBullet(bulletX, bulletY)
         elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                playerXChange = 0
-                playerYChange = 0
+            #if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+               # playerXChange = 0
+                #playerYChange = 0
+            if event.key == pygame.K_LEFT:
+                playerXChange -= -0.5
+            if event.key == pygame.K_RIGHT:
+                playerXChange -= 0.5
+            if event.key == pygame.K_UP:
+                playerYChange -= -0.5
+            if event.key == pygame.K_DOWN:
+                playerYChange -= 0.5
 
 
     #placeholder

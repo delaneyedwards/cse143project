@@ -29,6 +29,25 @@ pygame.display.set_caption("Shooter Game")
 icon = pygame.image.load('guns.png')
 pygame.display.set_icon(icon)
 
+# Player
+playerIcon = pygame.image.load('player.png')
+playerX = 400
+playerY = 400
+playerXChange = 0
+playerYChange = 0
+playerHP = 5
+
+# Player Bullets (subject to change based on enemy bullet funcitonality)
+bulletIcon = pygame.image.load('bullet(1).png')
+bulletX = 640
+bulletY = 600
+bulletXChange = 0
+bulletYChange = 2
+global bulletState
+bulletState = 'ready'
+
+#
+
 #Enemy
 enemyImg = pygame.image.load('player.png')
 enemyX = 400
@@ -38,6 +57,21 @@ enemyX_change = 0.1
 def enemy(x, y):
     #drawing the enemy image on the screen
     screen.blit(enemyImg, (x, y))
+
+# Not yet working, for when enemy bullet hits player
+# def playerHit(enemyBulletX, enemyBulletY, playerX, playerY):
+#     # Decrease playerHP
+#     return True
+
+# For player bullet functionality, shoots bullets.
+def fireBullet(x, y):
+    global bulletState
+    bulletState = 'fire'
+    screen.blit(bulletIcon, (x + 4, y))
+
+# To draw the player on screen
+def player(x, y):
+    screen.blit(playerIcon,(x, y))
 
 bulletImg = pygame.image.load('bullet.png')
 enemyBulletX = 400
@@ -84,6 +118,26 @@ while running:
             enemyBulletY += enemyBulletY_change
             bullet = True;
 
+        # For Player Movement
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                playerXChange = -0.5
+            elif event.key == pygame.K_RIGHT:
+                playerXChange = 0.5
+            elif event.key == pygame.K_UP:
+                playerYChange = -0.5
+            elif event.key == pygame.K_DOWN:
+                playerYChange = 0.5
+            elif event.key == pygame.K_SPACE and bulletState is 'ready':
+                bulletX = playerX
+                bulletY = playerY
+                fireBullet(bulletX, bulletY)
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                playerXChange = 0
+                playerYChange = 0
+
+
     #Drawing the menu if in the menu
     if in_menu:
         #drawing the buttons for the menu
@@ -107,4 +161,30 @@ while running:
         enemy_bullet(enemyBulletX, enemyBulletY)
     enemyX += enemyX_change
     enemy(enemyX, enemyY)
+    
+    # Player Movement
+    playerX += playerXChange
+    playerY += playerYChange
+
+    # BOUNDS FOR PLAYER
+    if playerX <= 0:
+        playerX = 0
+    elif playerX >= 800-64:
+        playerX = 800-64
+    
+    if playerY <= 0:
+        playerY = 0
+    elif playerY >= 600-64:
+        playerY = 600-64
+
+    # BULLETS FUNCTIONALITY
+    if bulletY <= 0:
+        bulletY = playerY
+        bulletState = 'ready'
+    if bulletState is 'fire':
+        fireBullet(bulletX, bulletY)
+        bulletY -= bulletYChange
+
+    player(playerX, playerY)
+
     pygame.display.update()

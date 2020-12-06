@@ -61,44 +61,45 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, dx, dy):
         super().__init__()
         self.image = pygame.image.load('player.png')
-        self.rect = self.image.get_rect()
-        self.rect.x = dx
-        self.rect.y = dy
-        self.xvel = 1
-        self.yvel = 1
+        self.x = random.randrange(200, 600)
+        self.y = random.randrange(50, 100)
+        self.rect = self.image.get_rect(center = (self.x, self.y))
+        self.xvel = random.choice([-0.25, 0.25])
+        self.yvel = random.choice([-0.25, 0.25])
         self.lastfire = 0
         self.reloadspeed = 3000
     def update(self, game_time, screen):
         if self.xvel > 0:
             if self.rect.right < width:
-                self.rect.x += self.xvel
+                self.x += self.xvel
             else:
                 self.xvel *= -1
         else:
             if self.rect.left > 0:
-                self.rect.x += self.xvel
+                self.x += self.xvel
             else:
                 self.xvel *= -1
 
         
         if self.yvel > 0:
             if self.rect.top < height:
-                self.rect.y += self.yvel
+                self.y += self.yvel
             else:
                 self.yvel *= -1
         else:
             if self.rect.bottom > 0:
-                self.rect.y += self.yvel
+                self.y += self.yvel
             else:
                 self.yvel *= -1
 
+        self.rect.center = (self.x, self.y)
         diff = game_time - self.lastfire
         if diff >= self.reloadspeed:
             self.fire(screen)
             self.lastfire = game_time
 
     def draw(self, screen):
-        screen.blit(self.image, self.rect)
+        screen.blit(int(self.rect.x), int(self.rect.y), self.rect)
 
     def fire(self, screen):
         vel = 0
@@ -231,7 +232,7 @@ while running:
                 playerYChange += -0.5
             if event.key == pygame.K_DOWN:
                 playerYChange += 0.5
-            if event.key == pygame.K_SPACE and bulletState is 'ready':
+            if event.key == pygame.K_SPACE and bulletState == 'ready':
                 bulletX = playerX
                 bulletY = playerY
                 fireBullet(bulletX, bulletY)
@@ -270,7 +271,7 @@ while running:
     if bulletY <= 0:
         bulletY = playerY
         bulletState = 'ready'
-    if bulletState is 'fire':
+    if bulletState == 'fire':
         fireBullet(bulletX, bulletY)
         bulletY -= bulletYChange
 
@@ -278,7 +279,7 @@ while running:
     for i in range (len(enemies)):
         if collision(bulletX, bulletY, enemies[i].rect.x + 16, enemies[i].rect.y + 16):
             enemy_group.remove(enemies[i])
-            enemies[i] = Enemy(900, -100)
+            enemies[i].kill()
             bulletState = "ready"
             bulletX = 0
             bulletY = 0

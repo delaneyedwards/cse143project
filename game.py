@@ -1,4 +1,5 @@
 import pygame
+import random
 
 #initialize the pygame
 pygame.init()
@@ -51,17 +52,32 @@ bulletYChange = 2
 global bulletState
 bulletState = 'ready'
 
-#
-
 #Enemy
 enemyImg = pygame.image.load('player.png')
 enemyX = 400
 enemyY = 50
-enemyX_change = 0.1
+enemyY_change = random.uniform(0, 1)
+enemyX_change = 0.25
 
 def enemy(x, y):
     #drawing the enemy image on the screen
     screen.blit(enemyImg, (x, y))
+
+bulletImg = pygame.image.load('enemyBullet.png')
+enemyBulletX = enemyX
+enemyBulletY = enemyY
+enemyBulletY_change = -2
+
+bullet_event, t, enemyBulletY_change = pygame.USEREVENT + 1, 1000, -2
+pygame.time.set_timer(bullet_event, 1000)
+
+def enemy_bullet(x,y):
+    screen.blit(bulletImg, (x,y))
+
+def fireEnemyBullet(x,y):
+    global enemyBulletState
+    enemyBulletState = 'fire'
+    screen.blit(bulletIcon, (x - 2, y))
 
 # Not yet working, for when enemy bullet hits player
 # def playerHit(enemyBulletX, enemyBulletY, playerX, playerY):
@@ -77,19 +93,6 @@ def fireBullet(x, y):
 # To draw the player on screen
 def player(x, y):
     screen.blit(playerIcon,(x, y))
-
-bulletImg = pygame.image.load('bullet.png')
-enemyBulletX = 400
-enemyBulletY = 50
-enemyBulletY_change = 0.1
-
-delay = 500
-bullet_event = pygame.USEREVENT + 1
-pygame.time.set_timer(bullet_event, delay)
-
-def enemy_bullet(x,y):
-    screen.blit(bulletImg, (x,y))
-
 
 #game loop for window
 bullet = False
@@ -144,6 +147,7 @@ while running:
     screen.fill((255,255,255))
     #stores mouse position
     mouse = pygame.mouse.get_pos()
+
     for event in pygame.event.get():
 
         #closing the window if red x is clicked
@@ -152,8 +156,8 @@ while running:
 
         if event.type == bullet_event:
             enemyBulletX = enemyX
+            enemyBulletY = enemyY
             enemyBulletY += enemyBulletY_change
-            bullet = True
 
         # For Player Movement
         elif event.type == pygame.KEYDOWN:
@@ -187,13 +191,19 @@ while running:
             
 
     if enemyX <= 0:
-        enemyX_change = 0.1
+        enemyX_change = 0.25
     elif enemyX >= 736:
-        enemyX_change = -0.1
+        enemyX_change = -0.25
+
+    if enemyY <= 0:
+        enemyY_change = random.uniform(0, 0.5)
+    elif enemyY >= 536:
+        enemyY_change = -random.uniform(0, 0.5)
 
     if bullet:
         enemy_bullet(enemyBulletX, enemyBulletY)
     enemyX += enemyX_change
+    enemyY += enemyY_change
     enemy(enemyX, enemyY)
     
     # Player Movement

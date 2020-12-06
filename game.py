@@ -1,11 +1,13 @@
 import pygame
 import random
+import time
 
 #initialize the pygame
 pygame.init()
 
 #create the screen with dimensions 800x600
 screen = pygame.display.set_mode((800, 600))
+clock = pygame.time.Clock
 
 #storing the dimensions of the screen
 width = screen.get_width()
@@ -52,32 +54,88 @@ bulletYChange = 2
 global bulletState
 bulletState = 'ready'
 
+enemy_group = pygame.sprite.Group()
+bullet_group = pygame.sprite.Group()
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, dx, dy):
+        super().__init__()
+        self.image = pygame.image.load('player.png')
+        self.rect = self.image.get_rect()
+        self.rect.x = dx
+        self.rect.y = dy
+        self.xvel = 0.5
+        self.yvel = 0.5
+        self.lastfire = 0
+        self.reloadspeed = 3000
+    def update(self, game_time, screen):
+        if self.xvel > 0:
+            if self.rect.right < width:
+                self.rect.x += self.xvel
+            else:
+                self.xvel *= -1
+        else:
+            if self.rect.left > 0:
+                self.rect.x += self.xvel
+            else:
+                self.xvel *= -1
+
+        diff = game_time - self.lastfire
+        if diff >= self.reloadspeed:
+            self.fire(screen)
+            self.lastfire = game_time
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+
+    def fire(self, screen):
+        bullet = enemyBullet(self.rect.x, self.rect.y)
+        bullet_group.add(bullet)
+
+class enemyBullet(pygame.sprite.Sprite):
+    def __init__(self, dx, dy):
+        super().__init__()
+        self.image = pygame.image.load('bullet(1).png')
+        self.rect = self.image.get_rect()
+        self.rect.x = dx
+        self.rect.y = dy
+        self.yvel = 1
+    def update(self):
+        self.rect.y += yvel
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)  
+
+enemy = Enemy(400, 50)
+enemy2 = Enemy(600, 50)
+enemy3 = Enemy(200, 50)
+enemy_group.add(enemy)
+enemy_group.add(enemy2)
+enemy_group.add(enemy3)
 #Enemy
-enemyImg = pygame.image.load('player.png')
-enemyX = 400
-enemyY = 50
-enemyY_change = random.uniform(0, 1)
-enemyX_change = 0.25
+#enemyImg = pygame.image.load('player.png')
+#enemyX = 400
+#enemyY = 50
+#enemyY_change = random.uniform(0, 0.5)
+#enemyX_change = random.uniform(0,0.5)
 
-def enemy(x, y):
+#def enemy(x, y):
     #drawing the enemy image on the screen
-    screen.blit(enemyImg, (x, y))
+    #screen.blit(enemyImg, (x, y))
 
-bulletImg = pygame.image.load('enemyBullet.png')
-enemyBulletX = enemyX
-enemyBulletY = enemyY
-enemyBulletY_change = -2
+""" bulletImg = pygame.image.load('enemyBullet.png')
+global enemyBulletState
+enemyBulletState = 'ready'
+enemyBulletX = 0
+enemyBulletY = 0
+enemyBulletY_change = 4 """
 
-bullet_event, t, enemyBulletY_change = pygame.USEREVENT + 1, 1000, -2
-pygame.time.set_timer(bullet_event, 1000)
 
-def enemy_bullet(x,y):
+""" def enemy_bullet(x,y):
     screen.blit(bulletImg, (x,y))
 
 def fireEnemyBullet(x,y):
     global enemyBulletState
     enemyBulletState = 'fire'
-    screen.blit(bulletIcon, (x - 2, y))
+    screen.blit(bulletIcon, (x - 2, y)) """
 
 # Not yet working, for when enemy bullet hits player
 # def playerHit(enemyBulletX, enemyBulletY, playerX, playerY):
@@ -106,6 +164,7 @@ while in_menu:
     screen.fill((255,255,255))
     #stores mouse position
     mouse = pygame.mouse.get_pos()
+
     for event in pygame.event.get():
 
         #closing the window if red x is clicked
@@ -144,21 +203,17 @@ while in_menu:
 
 while running:
     #make background white
+    time = pygame.time.get_ticks()
+    enemy.update(time, screen)
     screen.fill((255,255,255))
     #stores mouse position
     mouse = pygame.mouse.get_pos()
-
+    enemy_group.draw(screen)
     for event in pygame.event.get():
 
         #closing the window if red x is clicked
         if event.type == pygame.QUIT:
             running = False
-
-        if event.type == bullet_event:
-            enemyBulletX = enemyX
-            enemyBulletY = enemyY
-            enemyBulletY += enemyBulletY_change
-
         # For Player Movement
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
@@ -188,23 +243,6 @@ while running:
 
 
     #placeholder
-            
-
-    if enemyX <= 0:
-        enemyX_change = 0.25
-    elif enemyX >= 736:
-        enemyX_change = -0.25
-
-    if enemyY <= 0:
-        enemyY_change = random.uniform(0, 0.5)
-    elif enemyY >= 536:
-        enemyY_change = -random.uniform(0, 0.5)
-
-    if bullet:
-        enemy_bullet(enemyBulletX, enemyBulletY)
-    enemyX += enemyX_change
-    enemyY += enemyY_change
-    enemy(enemyX, enemyY)
     
     # Player Movement
     playerX += playerXChange

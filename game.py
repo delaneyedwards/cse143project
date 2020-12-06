@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+import math
 
 #initialize the pygame
 pygame.init()
@@ -38,7 +39,7 @@ icon = pygame.image.load('guns.png')
 pygame.display.set_icon(icon)
 
 # Player
-playerIcon = pygame.image.load('player.png')
+playerIcon = pygame.image.load('player-1-1.png.png')
 playerX = 400
 playerY = 400
 playerXChange = 0
@@ -47,8 +48,8 @@ playerHP = 5
 
 # Player Bullets (subject to change based on enemy bullet funcitonality)
 bulletIcon = pygame.image.load('bullet(1).png')
-bulletX = 640
-bulletY = 600
+bulletX = 1000
+bulletY = 1000
 bulletXChange = 0
 bulletYChange = 2
 global bulletState
@@ -126,8 +127,9 @@ class enemyBullet(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
     
 
-enemy = Enemy(400, 50)
-enemy_group.add(enemy)
+enemies = [Enemy(400, 50), Enemy(600, 50), Enemy(200, 50)]
+for enemy in enemies:
+    enemy_group.add(enemy)
 
 # Not yet working, for when enemy bullet hits player
 # def playerHit(enemyBulletX, enemyBulletY, playerX, playerY):
@@ -143,6 +145,13 @@ def fireBullet(x, y):
 # To draw the player on screen
 def player(x, y):
     screen.blit(playerIcon,(x, y))
+
+# To calculate if this is a collision or not (True -> collision, False -> No collision)
+def collision(x1, y1, x2, y2):
+    if math.sqrt(math.pow(x1-x2, 2) + math.pow(y1-y2, 2)) < 20:
+        return True
+    else:
+        return False
 
 #game loop for window
 bullet = False
@@ -196,9 +205,10 @@ while in_menu:
 while running:
     #make background white
     time = pygame.time.get_ticks()
-    if time == 10000:
-        enemy2 = Enemy(600, 50)
-        enemy_group.add(enemy2)
+    # Edited so that it spawns one new enemy every 10 secs
+    if time % 10000 == 0:
+        enemies.append(Enemy(600, 50))
+        enemy_group.add(enemies[len(enemies)-1])
     enemy_group.update(time, screen)
     bullet_group.update()
     screen.fill((255,255,255))
@@ -263,6 +273,27 @@ while running:
     if bulletState is 'fire':
         fireBullet(bulletX, bulletY)
         bulletY -= bulletYChange
+
+    # For collision on enemies, removes enemy from screen after shooting it
+    for i in range (len(enemies)):
+        if collision(bulletX, bulletY, enemies[i].rect.x + 16, enemies[i].rect.y + 16):
+            enemy_group.remove(enemies[i])
+            enemies[i] = Enemy(900, -100)
+            bulletState = "ready"
+            bulletX = 0
+            bulletY = 0
+    # Respawns 3 enemies if you kill all of them
+    if not enemy_group:
+        for i in range(3):
+            enemies[i] = Enemy(random.randint(64,800-64), random.randint(64,300))
+            enemy_group.add(enemies[i])
+    # if collision(bulletX, bulletY, playerX, playerY):
+    #     playerHP -= 1
+    
+    # Temporary until we get a game over screen
+    if playerHP == 0:
+        print("game over")
+        playerHP -= 1
 
     player(playerX, playerY)
 

@@ -8,7 +8,8 @@ pygame.init()
 
 #create the screen with dimensions 800x600
 screen = pygame.display.set_mode((800, 600))
-clock = pygame.time.Clock
+clock = pygame.time.Clock()
+FPS = 60
 
 #storing the dimensions of the screen
 width = screen.get_width()
@@ -42,6 +43,7 @@ pygame.display.set_icon(icon)
 playerIcon = pygame.image.load('player-1-1.png.png')
 playerX = 400
 playerY = 400
+playerMoveSpeed = 5
 playerXChange = 0
 playerYChange = 0
 playerHP = 3
@@ -50,8 +52,9 @@ playerHP = 3
 bulletIcon = pygame.image.load('bullet(1).png')
 bulletX = 1000
 bulletY = 1000
+bulletMoveSpeed = 10
 bulletXChange = 0
-bulletYChange = 2
+bulletYChange = 10
 global bulletState
 bulletState = 'ready'
 
@@ -218,8 +221,9 @@ while in_menu:
 while running:
     #make background white
     time = pygame.time.get_ticks()
+    clock.tick(FPS)
     # Edited so that it spawns one new enemy every 10 secs
-    if time % 10000 == 0:
+    if time % 600 == 0:
         enemies.append(Enemy(600, 50))
         enemy_group.add(enemies[len(enemies)-1])
     enemy_group.update(time, screen)
@@ -237,13 +241,13 @@ while running:
         # For Player Movement
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                playerXChange += -1
+                playerXChange += -playerMoveSpeed
             if event.key == pygame.K_RIGHT:
-                playerXChange += 1
+                playerXChange += playerMoveSpeed
             if event.key == pygame.K_UP:
-                playerYChange += -1
+                playerYChange += -playerMoveSpeed
             if event.key == pygame.K_DOWN:
-                playerYChange += 1
+                playerYChange += playerMoveSpeed
             if event.key == pygame.K_SPACE and bulletState == 'ready':
                 bulletX = playerX
                 bulletY = playerY
@@ -253,13 +257,13 @@ while running:
                # playerXChange = 0
                 #playerYChange = 0
             if event.key == pygame.K_LEFT:
-                playerXChange -= -1
+                playerXChange -= -playerMoveSpeed
             if event.key == pygame.K_RIGHT:
-                playerXChange -= 1
+                playerXChange -= playerMoveSpeed
             if event.key == pygame.K_UP:
-                playerYChange -= -1
+                playerYChange -= -playerMoveSpeed
             if event.key == pygame.K_DOWN:
-                playerYChange -= 1
+                playerYChange -= playerMoveSpeed
 
 
     #placeholder
@@ -316,6 +320,7 @@ while running:
     else:
         player(playerX, playerY)
         displayHP()
+
 
 
     pygame.display.update()

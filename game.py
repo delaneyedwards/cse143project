@@ -44,7 +44,7 @@ playerX = 400
 playerY = 400
 playerXChange = 0
 playerYChange = 0
-playerHP = 5
+playerHP = 3
 
 # Player Bullets (subject to change based on enemy bullet funcitonality)
 bulletIcon = pygame.image.load('bullet(1).png')
@@ -154,6 +154,18 @@ def collision(x1, y1, x2, y2):
     else:
         return False
 
+# To display a text when the player loses
+def gameOver():
+    font = pygame.font.Font('freesansbold.ttf', 64)
+    gameOverText = font.render('You Died', True, (0, 0, 0))
+    screen.blit(gameOverText, (250, 250))
+
+# To display the player's current HP in the top left
+def displayHP():
+    font = pygame.font.Font('freesansbold.ttf', 20)
+    hp = font.render('HP: ' + str(playerHP), True, (0, 0, 0))
+    screen.blit(hp, (10, 10))
+
 #game loop for window
 bullet = False
 running = False
@@ -225,13 +237,13 @@ while running:
         # For Player Movement
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                playerXChange += -0.5
+                playerXChange += -1
             if event.key == pygame.K_RIGHT:
-                playerXChange += 0.5
+                playerXChange += 1
             if event.key == pygame.K_UP:
-                playerYChange += -0.5
+                playerYChange += -1
             if event.key == pygame.K_DOWN:
-                playerYChange += 0.5
+                playerYChange += 1
             if event.key == pygame.K_SPACE and bulletState == 'ready':
                 bulletX = playerX
                 bulletY = playerY
@@ -241,13 +253,13 @@ while running:
                # playerXChange = 0
                 #playerYChange = 0
             if event.key == pygame.K_LEFT:
-                playerXChange -= -0.5
+                playerXChange -= -1
             if event.key == pygame.K_RIGHT:
-                playerXChange -= 0.5
+                playerXChange -= 1
             if event.key == pygame.K_UP:
-                playerYChange -= -0.5
+                playerYChange -= -1
             if event.key == pygame.K_DOWN:
-                playerYChange -= 0.5
+                playerYChange -= 1
 
 
     #placeholder
@@ -279,7 +291,7 @@ while running:
     for i in range (len(enemies)):
         if collision(bulletX, bulletY, enemies[i].rect.x + 16, enemies[i].rect.y + 16):
             enemy_group.remove(enemies[i])
-            enemies[i].kill()
+            enemies[i] = Enemy(900, -100)
             bulletState = "ready"
             bulletX = 0
             bulletY = 0
@@ -288,14 +300,22 @@ while running:
         for i in range(3):
             enemies[i] = Enemy(random.randint(64,800-64), random.randint(64,300))
             enemy_group.add(enemies[i])
-    # if collision(bulletX, bulletY, playerX, playerY):
-    #     playerHP -= 1
     
-    # Temporary until we get a game over screen
-    if playerHP == 0:
-        print("game over")
-        playerHP -= 1
+    
+    # For collision on player 
+    for bullet in iter(bullet_group):
+        if collision(bullet.rect.x, bullet.rect.y, playerX, playerY):
+            playerHP -= 1
+            bullet_group.remove(bullet)
+    
+    # To decide whether its game over or not
+    if playerHP <= 0:
+        gameOver()
+        playerX = 900
+        playerY = -100
+    else:
+        player(playerX, playerY)
+        displayHP()
 
-    player(playerX, playerY)
 
     pygame.display.update()

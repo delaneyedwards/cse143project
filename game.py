@@ -7,8 +7,9 @@ import math
 pygame.init()
 
 #create the screen with dimensions 800x600
-screen = pygame.display.set_mode((800, 700))
-clock = pygame.time.Clock
+screen = pygame.display.set_mode((800, 600))
+clock = pygame.time.Clock()
+FPS = 60
 
 background = pygame.image.load('background..png')
 #storing the dimensions of the screen
@@ -43,6 +44,7 @@ pygame.display.set_icon(icon)
 playerIcon = pygame.image.load('player-1-1.png.png')
 playerX = 400
 playerY = 400
+playerMoveSpeed = 5
 playerXChange = 0
 playerYChange = 0
 playerHP = 3
@@ -51,8 +53,9 @@ playerHP = 3
 bulletIcon = pygame.image.load('bullet(1).png')
 bulletX = 1000
 bulletY = 1000
+bulletMoveSpeed = 10
 bulletXChange = 0
-bulletYChange = 2
+bulletYChange = 10
 global bulletState
 bulletState = 'ready'
 
@@ -81,7 +84,7 @@ class Enemy(pygame.sprite.Sprite):
             else:
                 self.xvel *= -1
 
-        
+
         if self.yvel > 0:
             if self.rect.bottom < height:
                 self.y += self.yvel
@@ -127,7 +130,7 @@ class enemyBullet(pygame.sprite.Sprite):
             self.kill()
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-    
+
 
 enemies = [Enemy(400, 50), Enemy(600, 50), Enemy(200, 50)]
 for enemy in enemies:
@@ -187,7 +190,7 @@ while in_menu:
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
-            
+
         #mouse interactions -- in progress
         if event.type == pygame.MOUSEBUTTONDOWN:
              #mouse controls on the menu
@@ -220,8 +223,9 @@ while in_menu:
 while running:
     #make background white
     time = pygame.time.get_ticks()
+    clock.tick(FPS)
     # Edited so that it spawns one new enemy every 10 secs
-    if time % 10000 == 0:
+    if time % 600 == 0:
         enemies.append(Enemy(600, 50))
         enemy_group.add(enemies[len(enemies)-1])
     enemy_group.update(time, screen)
@@ -239,13 +243,13 @@ while running:
         # For Player Movement
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                playerXChange += -1
+                playerXChange += -playerMoveSpeed
             if event.key == pygame.K_RIGHT:
-                playerXChange += 1
+                playerXChange += playerMoveSpeed
             if event.key == pygame.K_UP:
-                playerYChange += -1
+                playerYChange += -playerMoveSpeed
             if event.key == pygame.K_DOWN:
-                playerYChange += 1
+                playerYChange += playerMoveSpeed
             if event.key == pygame.K_SPACE and bulletState == 'ready':
                 bulletX = playerX
                 bulletY = playerY
@@ -255,17 +259,17 @@ while running:
                # playerXChange = 0
                 #playerYChange = 0
             if event.key == pygame.K_LEFT:
-                playerXChange -= -1
+                playerXChange -= -playerMoveSpeed
             if event.key == pygame.K_RIGHT:
-                playerXChange -= 1
+                playerXChange -= playerMoveSpeed
             if event.key == pygame.K_UP:
-                playerYChange -= -1
+                playerYChange -= -playerMoveSpeed
             if event.key == pygame.K_DOWN:
-                playerYChange -= 1
+                playerYChange -= playerMoveSpeed
 
 
     #placeholder
-    
+
     # Player Movement
     playerX += playerXChange
     playerY += playerYChange
@@ -275,7 +279,7 @@ while running:
         playerX = 0
     elif playerX >= 800-64:
         playerX = 800-64
-    
+
     if playerY <= 100:
         playerY = 100
     elif playerY >= height-64:
@@ -302,14 +306,14 @@ while running:
         for i in range(3):
             enemies[i] = Enemy(random.randint(64,800-64), random.randint(64,300))
             enemy_group.add(enemies[i])
-    
-    
-    # For collision on player 
+
+
+    # For collision on player
     for bullet in iter(bullet_group):
         if collision(bullet.rect.x, bullet.rect.y, playerX, playerY):
             playerHP -= 1
             bullet_group.remove(bullet)
-    
+
     # To decide whether its game over or not
     if playerHP <= 0:
         gameOver()
@@ -318,6 +322,7 @@ while running:
     else:
         player(playerX, playerY)
         displayHP()
+
 
 
     pygame.display.update()

@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((800, 700))
 clock = pygame.time.Clock()
 FPS = 60
 
-background = pygame.image.load('background..png')
+background = pygame.image.load('background.png')
 #storing the dimensions of the screen
 width = screen.get_width()
 height = screen.get_height()

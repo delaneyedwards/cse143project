@@ -23,6 +23,20 @@ color_light = (175,175,175)
 color_dark = (100,100,100)
 color_blue = (50,50,255)
 
+#Buttons
+startbutton = pygame.image.load('startbutton.png')
+startbuttonrect = startbutton.get_rect()
+optionsbutton = pygame.image.load('optionsbutton.png')
+optionsbuttonrect = optionsbutton.get_rect()
+quitbutton = pygame.image.load('quitbutton.png')
+quitbuttonrect = quitbutton.get_rect()
+easybutton = pygame.image.load('easybutton.png')
+easybuttonrect = easybutton.get_rect()
+normalbutton = pygame.image.load('normalbutton.png')
+normalbuttonrect = normalbutton.get_rect()
+hardbutton = pygame.image.load('hardbutton.png')
+hardbuttonrect = hardbutton.get_rect()
+
 #fonts and texts
 smallfont = pygame.font.SysFont('Corbel',35)
 largefont = pygame.font.SysFont('Corbel',65)
@@ -68,8 +82,8 @@ class Enemy(pygame.sprite.Sprite):
         self.x = random.randrange(200, 600)
         self.y = random.randrange(100, 200)
         self.rect = self.image.get_rect(center = (self.x, self.y))
-        self.xvel = random.choice([-0.25, 0.25])
-        self.yvel = random.choice([-0.25, 0.25])
+        self.xvel = random.choice([-1, 1])
+        self.yvel = random.choice([-1, 1])
         self.lastfire = 0
         self.reloadspeed = 3000
     def update(self, game_time, screen):
@@ -108,10 +122,10 @@ class Enemy(pygame.sprite.Sprite):
     def fire(self, screen):
         vel = 0
         if playerY < self.rect.y:
-            vel = -1
+            vel = -4
             bullet = enemyBullet(self.rect.x, self.rect.y, vel, 'bullet(1).png')
         elif playerY > self.rect.y:
-            vel = 1
+            vel = 4
             bullet = enemyBullet(self.rect.x, self.rect.y, vel, 'enemyBullet.png')
         bullet_group.add(bullet)
 
@@ -179,6 +193,7 @@ in_options = False
 #Drawing the menu if in the menu
 while in_menu:
     #make background white
+    #screen.fill((255, 255, 255))
     screen.blit(background, (0, -80))
 
     #stores mouse position
@@ -195,30 +210,62 @@ while in_menu:
         if event.type == pygame.MOUSEBUTTONDOWN:
              #mouse controls on the menu
              if in_menu:
-                if width/3 <= mouse[0] <= width*2/3 and height*6/8 <= mouse[1] <= height*6/8 + 40:
+                if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
                     running = False
                     in_menu = False
                     pygame.quit()
-                if width/3 <= mouse[0] <= width*2/3 and height*4/8 <= mouse[1] <= height*4/8 + 40:
+                if 266.5 <= mouse[0] <= 533.5 and 350 <= mouse[1] <= 450:
                     in_options = True
-                if width/3 <= mouse[0] <= width*2/3 and height*4/8 <= mouse[1] <= height*4/8 + 40:
+                    in_menu = False
+                if 266.5 <= mouse[0] <= 533.5 and 200 <= mouse[1] <= 300:
                     in_menu = False
                     running = True
 
         #drawing the buttons for the menu
         #Quit button
-        pygame.draw.rect(screen,color_dark,[width/3,height*6/8,width/3,40])
-        screen.blit(text_quit,(width/2,height * 6/8))
+        quitbuttonrect.center = (400, 550)
+        screen.blit(quitbutton, quitbuttonrect)
         #Options button
-        pygame.draw.rect(screen,color_dark,[width/3,height*5/8,width/3,40])
-        screen.blit(text_options,(width/2,height * 5/8))
+        optionsbuttonrect.center = (400, 400)
+        screen.blit(optionsbutton, optionsbuttonrect)
         #Play button
-        pygame.draw.rect(screen,color_dark,[width/3,height*4/8,width/3,40])
-        screen.blit(text_play,(width/2,height * 4/8))
+        startbuttonrect.center = (400, 250)
+        screen.blit(startbutton, startbuttonrect)
         #Title text
         screen.blit(text_title,titleRect)
 
         pygame.display.update()
+
+easy_mode = False
+normal_mode = True
+hard_mode = False
+while in_options:
+    screen.blit(background, (0, -80))
+
+    #stores mouse position
+    mouse = pygame.mouse.get_pos()
+
+    if event.type == pygame.MOUSEBUTTONDOWN:
+             #mouse controls on the menu
+             if in_options:
+                if 266.5 <= mouse[0] <= 533.5 and 200 <= mouse[1] <= 300:
+                    easy_mode = True
+                if 266.5 <= mouse[0] <= 533.5 and 350 <= mouse[1] <= 450:
+                    normal_mode = True
+                if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
+                    hard_mode = True
+                
+
+    #Easy Button
+    easybuttonrect.center = (400, 250)
+    screen.blit(easybutton, easybuttonrect)
+    #Normal button
+    normalbuttonrect.center = (400, 400)
+    screen.blit(normalbutton, normalbuttonrect)
+    #Hard button
+    hardbuttonrect.center = (400, 550)
+    screen.blit(hardbutton, hardbuttonrect)
+
 
 while running:
     #make background white
@@ -231,6 +278,8 @@ while running:
     enemy_group.update(time, screen)
     bullet_group.update()
     screen.blit(background, (0, -80))
+    #screen.fill((255, 255, 255))
+
     #stores mouse position
     mouse = pygame.mouse.get_pos()
     bullet_group.draw(screen)
@@ -277,8 +326,8 @@ while running:
     # BOUNDS FOR PLAYER
     if playerX <= 0:
         playerX = 0
-    elif playerX >= 800-64:
-        playerX = 800-64
+    elif playerX >= width-32:
+        playerX = 800-32
 
     if playerY <= 100:
         playerY = 100

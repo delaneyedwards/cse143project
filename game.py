@@ -7,9 +7,10 @@ import math
 pygame.init()
 
 #create the screen with dimensions 800x600
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((800, 700))
 clock = pygame.time.Clock
 
+background = pygame.image.load('background..png')
 #storing the dimensions of the screen
 width = screen.get_width()
 height = screen.get_height()
@@ -62,7 +63,7 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load('player.png')
         self.x = random.randrange(200, 600)
-        self.y = random.randrange(50, 100)
+        self.y = random.randrange(100, 200)
         self.rect = self.image.get_rect(center = (self.x, self.y))
         self.xvel = random.choice([-0.25, 0.25])
         self.yvel = random.choice([-0.25, 0.25])
@@ -82,12 +83,12 @@ class Enemy(pygame.sprite.Sprite):
 
         
         if self.yvel > 0:
-            if self.rect.top < height:
+            if self.rect.bottom < height:
                 self.y += self.yvel
             else:
                 self.yvel *= -1
         else:
-            if self.rect.bottom > 0:
+            if self.rect.top > 100:
                 self.y += self.yvel
             else:
                 self.yvel *= -1
@@ -175,7 +176,8 @@ in_options = False
 #Drawing the menu if in the menu
 while in_menu:
     #make background white
-    screen.fill((255,255,255))
+    screen.blit(background, (0, -80))
+
     #stores mouse position
     mouse = pygame.mouse.get_pos()
 
@@ -224,7 +226,7 @@ while running:
         enemy_group.add(enemies[len(enemies)-1])
     enemy_group.update(time, screen)
     bullet_group.update()
-    screen.fill((255,255,255))
+    screen.blit(background, (0, -80))
     #stores mouse position
     mouse = pygame.mouse.get_pos()
     bullet_group.draw(screen)
@@ -274,10 +276,10 @@ while running:
     elif playerX >= 800-64:
         playerX = 800-64
     
-    if playerY <= 0:
-        playerY = 0
-    elif playerY >= 600-64:
-        playerY = 600-64
+    if playerY <= 100:
+        playerY = 100
+    elif playerY >= height-64:
+        playerY = height-64
 
     # BULLETS FUNCTIONALITY
     if bulletY <= 0:

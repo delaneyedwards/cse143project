@@ -7,7 +7,7 @@ import math
 pygame.init()
 
 #create the screen with dimensions 800x600
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((800, 700))
 clock = pygame.time.Clock()
 FPS = 60
 

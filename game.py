@@ -244,16 +244,22 @@ while in_options:
 
     #stores mouse position
     mouse = pygame.mouse.get_pos()
+    for event in pygame.event.get():
 
-    if event.type == pygame.MOUSEBUTTONDOWN:
-             #mouse controls on the menu
-             if in_options:
-                if 266.5 <= mouse[0] <= 533.5 and 200 <= mouse[1] <= 300:
-                    easy_mode = True
-                if 266.5 <= mouse[0] <= 533.5 and 350 <= mouse[1] <= 450:
-                    normal_mode = True
-                if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
-                    hard_mode = True
+        #closing the window if red x is clicked
+        if event.type == pygame.QUIT:
+            running = False
+            pygame.quit()
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+                #mouse controls on the menu
+                if in_options:
+                    if 266.5 <= mouse[0] <= 533.5 and 200 <= mouse[1] <= 300:
+                        easy_mode = True
+                    if 266.5 <= mouse[0] <= 533.5 and 350 <= mouse[1] <= 450:
+                        normal_mode = True
+                    if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
+                        hard_mode = True
                 
 
     #Easy Button
@@ -265,6 +271,9 @@ while in_options:
     #Hard button
     hardbuttonrect.center = (400, 550)
     screen.blit(hardbutton, hardbuttonrect)
+
+    pygame.display.update()
+
 
 
 while running:

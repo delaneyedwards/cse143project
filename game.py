@@ -215,8 +215,8 @@ while in_menu:
                     in_menu = False
                     pygame.quit()
                 if 266.5 <= mouse[0] <= 533.5 and 350 <= mouse[1] <= 450:
-                    in_options = True
                     in_menu = False
+                    in_options = True
                 if 266.5 <= mouse[0] <= 533.5 and 200 <= mouse[1] <= 300:
                     in_menu = False
                     running = True
@@ -232,7 +232,7 @@ while in_menu:
         startbuttonrect.center = (400, 250)
         screen.blit(startbutton, startbuttonrect)
         #Title text
-        screen.blit(text_title,titleRect)
+        #screen.blit(text_title,titleRect)
 
         pygame.display.update()
 

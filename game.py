@@ -62,6 +62,7 @@ playerMoveSpeed = 5
 playerXChange = 0
 playerYChange = 0
 playerHP = 3
+score = 0
 
 # Player Bullets (subject to change based on enemy bullet funcitonality)
 bulletIcon = pygame.image.load('bullet(1).png')
@@ -183,6 +184,12 @@ def displayHP():
     font = pygame.font.Font('freesansbold.ttf', 20)
     hp = font.render('HP: ' + str(playerHP), True, (0, 0, 0))
     screen.blit(hp, (10, 10))
+
+# To display the player's current score in the top right
+def displayScore():
+    font = pygame.font.Font('freesansbold.ttf', 20)
+    Score = font.render('Score: ' + str(score), True, (0, 0, 0))
+    screen.blit(Score, (width - 120, 10))
 
 #game loop for window
 bullet = False
@@ -353,12 +360,13 @@ while running:
 
     # For collision on enemies, removes enemy from screen after shooting it
     for i in range (len(enemies)):
-        if collision(bulletX, bulletY, enemies[i].rect.x + 16, enemies[i].rect.y + 16):
+        if collision(bulletX, bulletY, enemies[i].rect.x, enemies[i].rect.y + 16):
             enemy_group.remove(enemies[i])
             enemies[i] = Enemy(900, -100)
             bulletState = "ready"
             bulletX = 0
             bulletY = 0
+            score += 1
     # Respawns 3 enemies if you kill all of them
     if not enemy_group:
         for i in range(3):
@@ -380,6 +388,9 @@ while running:
     else:
         player(playerX, playerY)
         displayHP()
+    
+    #display score
+    displayScore()
 
 
 

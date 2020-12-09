@@ -74,6 +74,9 @@ bulletYChange = 10
 global bulletState
 bulletState = 'ready'
 
+#enemy spawn rate
+enemy_spawn_rate = 600
+
 enemy_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 class Enemy(pygame.sprite.Sprite):
@@ -261,19 +264,27 @@ while in_options:
         if event.type == pygame.MOUSEBUTTONDOWN:
                 #mouse controls on the menu
                 if in_options:
-                    if 266.5 <= mouse[0] <= 533.5 and 200 <= mouse[1] <= 300:
+                    if 266.5 <= mouse[0] <= 533.5 and 125 <= mouse[1] <= 225:
+                        running = True
+                        in_options = False
+                    if 266.5 <= mouse[0] <= 533.5 and 250 <= mouse[1] <= 350:
                         easy_mode = True
-                    if 266.5 <= mouse[0] <= 533.5 and 350 <= mouse[1] <= 450:
+                        enemy_spawn_rate = 600
+                    if 266.5 <= mouse[0] <= 533.5 and 375 <= mouse[1] <= 475:
                         normal_mode = True
+                        enemy_spawn_rate = 100
                     if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
                         hard_mode = True
+                        enemy_spawn_rate = 30
                 
-
+    #Start Button
+    startbuttonrect.center = (400, 175)
+    screen.blit(startbutton, startbuttonrect)
     #Easy Button
-    easybuttonrect.center = (400, 250)
+    easybuttonrect.center = (400, 300)
     screen.blit(easybutton, easybuttonrect)
     #Normal button
-    normalbuttonrect.center = (400, 400)
+    normalbuttonrect.center = (400, 425)
     screen.blit(normalbutton, normalbuttonrect)
     #Hard button
     hardbuttonrect.center = (400, 550)
@@ -288,7 +299,7 @@ while running:
     time = pygame.time.get_ticks()
     clock.tick(FPS)
     # Edited so that it spawns one new enemy every 10 secs
-    if time % 600 == 0:
+    if time % enemy_spawn_rate == 0:
         enemies.append(Enemy(600, 50))
         enemy_group.add(enemies[len(enemies)-1])
     enemy_group.update(time, screen)

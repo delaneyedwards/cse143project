@@ -78,7 +78,7 @@ bullet_group = pygame.sprite.Group()
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, dx, dy):
         super().__init__()
-        self.image = pygame.image.load('player.png')
+        self.image = pygame.image.load('Enemy-Person.png.png')
         self.x = random.randrange(200, 600)
         self.y = random.randrange(100, 200)
         self.rect = self.image.get_rect(center = (self.x, self.y))

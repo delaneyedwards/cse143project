@@ -276,12 +276,15 @@ while in_options:
                     if 266.5 <= mouse[0] <= 533.5 and 250 <= mouse[1] <= 350:
                         easy_mode = True
                         enemy_spawn_rate = 600
+                        scoreToWin = 15
                     if 266.5 <= mouse[0] <= 533.5 and 375 <= mouse[1] <= 475:
                         normal_mode = True
                         enemy_spawn_rate = 100
+                        scoreToWin = 20
                     if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
                         hard_mode = True
                         enemy_spawn_rate = 30
+                        scoreToWin = 25
                         #  
                 
     #Start Button

@@ -63,6 +63,7 @@ playerXChange = 0
 playerYChange = 0
 playerHP = 3
 score = 0
+scoreToWin = 15
 
 # Player Bullets (subject to change based on enemy bullet funcitonality)
 bulletIcon = pygame.image.load('bullet(1).png')
@@ -179,20 +180,25 @@ def collision(x1, y1, x2, y2):
 # To display a text when the player loses
 def gameOver():
     font = pygame.font.Font('freesansbold.ttf', 64)
-    gameOverText = font.render('You Died', True, (0, 0, 0))
+    gameOverText = font.render('You Died', True, (101, 67, 33))
     screen.blit(gameOverText, (250, 250))
 
 # To display the player's current HP in the top left
 def displayHP():
     font = pygame.font.Font('freesansbold.ttf', 20)
-    hp = font.render('HP: ' + str(playerHP), True, (0, 0, 0))
+    hp = font.render('HP: ' + str(playerHP), True, (128, 96, 77))
     screen.blit(hp, (10, 10))
 
 # To display the player's current score in the top right
 def displayScore():
     font = pygame.font.Font('freesansbold.ttf', 20)
-    Score = font.render('Score: ' + str(score), True, (0, 0, 0))
+    Score = font.render('Score: ' + str(score), True, (128, 96, 77))
     screen.blit(Score, (width - 120, 10))
+
+def winScreen():
+    font = pygame.font.Font('freesansbold.ttf', 50)
+    gameOverText = font.render('Nice Shots, you win!', True, (101, 67, 33))
+    screen.blit(gameOverText, (150, 325))
 
 #game loop for window
 bullet = False
@@ -276,6 +282,7 @@ while in_options:
                     if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
                         hard_mode = True
                         enemy_spawn_rate = 30
+                        #  
                 
     #Start Button
     startbuttonrect.center = (400, 175)
@@ -309,6 +316,9 @@ while running:
 
     #stores mouse position
     mouse = pygame.mouse.get_pos()
+    if score >= scoreToWin:
+        bullet_group.empty()
+        enemy_group.empty()
     bullet_group.draw(screen)
     enemy_group.draw(screen)
     for event in pygame.event.get():
@@ -317,31 +327,33 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         # For Player Movement
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                playerXChange += -playerMoveSpeed
-            if event.key == pygame.K_RIGHT:
-                playerXChange += playerMoveSpeed
-            if event.key == pygame.K_UP:
-                playerYChange += -playerMoveSpeed
-            if event.key == pygame.K_DOWN:
-                playerYChange += playerMoveSpeed
-            if event.key == pygame.K_SPACE and bulletState == 'ready':
-                bulletX = playerX
-                bulletY = playerY
-                fireBullet(bulletX, bulletY)
-        elif event.type == pygame.KEYUP:
-            #if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-               # playerXChange = 0
-                #playerYChange = 0
-            if event.key == pygame.K_LEFT:
-                playerXChange -= -playerMoveSpeed
-            if event.key == pygame.K_RIGHT:
-                playerXChange -= playerMoveSpeed
-            if event.key == pygame.K_UP:
-                playerYChange -= -playerMoveSpeed
-            if event.key == pygame.K_DOWN:
-                playerYChange -= playerMoveSpeed
+        if score < scoreToWin:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    playerXChange += -playerMoveSpeed
+                if event.key == pygame.K_RIGHT:
+                    playerXChange += playerMoveSpeed
+                if event.key == pygame.K_UP:
+                    playerYChange += -playerMoveSpeed
+                if event.key == pygame.K_DOWN:
+                    playerYChange += playerMoveSpeed
+                if event.key == pygame.K_SPACE and bulletState == 'ready':
+                    bulletX = playerX
+                    bulletY = playerY
+                    fireBullet(bulletX, bulletY)
+            elif event.type == pygame.KEYUP:
+                #if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                # playerXChange = 0
+                    #playerYChange = 0
+                if event.key == pygame.K_LEFT:
+                    playerXChange -= -playerMoveSpeed
+                if event.key == pygame.K_RIGHT:
+                    playerXChange -= playerMoveSpeed
+                if event.key == pygame.K_UP:
+                    playerYChange -= -playerMoveSpeed
+                if event.key == pygame.K_DOWN:
+                    playerYChange -= playerMoveSpeed
+            
 
 
     #placeholder
@@ -400,6 +412,9 @@ while running:
         player(playerX, playerY)
         displayHP()
     
+    
+    if score >= scoreToWin:
+        winScreen()
     #display score
     displayScore()
 

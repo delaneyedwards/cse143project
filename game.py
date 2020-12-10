@@ -42,6 +42,8 @@ darknormalbutton = pygame.image.load('darknormalbutton.png')
 darknormalbuttonrect = darknormalbutton.get_rect()
 darkhardbutton = pygame.image.load('darkhardbutton.png')
 darkhardbuttonrect = darkhardbutton.get_rect()
+playagainbutton = pygame.image.load('playagainbutton.png')
+playagainbuttonrect = playagainbutton.get_rect()
 #fonts and texts
 smallfont = pygame.font.SysFont('Corbel',35)
 largefont = pygame.font.SysFont('Corbel',65)
@@ -160,11 +162,6 @@ enemies = [Enemy(400, 50), Enemy(600, 50), Enemy(200, 50)]
 for enemy in enemies:
     enemy_group.add(enemy)
 
-# Not yet working, for when enemy bullet hits player
-# def playerHit(enemyBulletX, enemyBulletY, playerX, playerY):
-#     # Decrease playerHP
-#     return True
-
 # For player bullet functionality, shoots bullets.
 def fireBullet(x, y):
     global bulletState
@@ -204,6 +201,8 @@ def winScreen():
     font = pygame.font.Font('freesansbold.ttf', 50)
     gameOverText = font.render('Nice Shots, you win!', True, (101, 67, 33))
     screen.blit(gameOverText, (150, 325))
+    playagainbuttonrect.center = (400, 550)
+    screen.blit(playagainbutton, playagainbuttonrect)
 
 #game loop for window
 bullet = False
@@ -326,7 +325,8 @@ while in_options:
     pygame.display.update()
 
 
-
+game_over = False
+win = False
 while running:
     #make background white
     time = pygame.time.get_ticks()
@@ -381,9 +381,6 @@ while running:
                     playerYChange -= playerMoveSpeed
             
 
-
-    #placeholder
-
     # Player Movement
     playerX += playerXChange
     playerY += playerYChange
@@ -431,7 +428,9 @@ while running:
 
     # To decide whether its game over or not
     if playerHP <= 0:
-        gameOver()
+        game_over = True
+        win = False
+        running = False
         playerX = 900
         playerY = -100
     else:
@@ -440,10 +439,33 @@ while running:
     
     
     if score >= scoreToWin:
-        winScreen()
+        game_over = True
+        win = True
+        running = False
+
     #display score
     displayScore()
 
-
-
     pygame.display.update()
+
+while game_over:
+    screen.blit(background, (0, -80))
+
+    #stores mouse position
+    mouse = pygame.mouse.get_pos()
+    if win:
+        winScreen()
+    else:
+        gameOver()
+
+    for event in pygame.event.get():
+
+        #closing the window if red x is clicked
+        if event.type == pygame.QUIT:
+            game_over = False
+            pygame.quit()
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
+                in_menu = True
+                game_over = False

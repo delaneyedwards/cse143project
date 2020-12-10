@@ -187,9 +187,6 @@ def gameOver():
     font = pygame.font.Font('freesansbold.ttf', 64)
     gameOverText = font.render('You Died', True, (101, 67, 33))
     screen.blit(gameOverText, (250, 250))
-    font2 = pygame.font.Font('freesansbold.ttf', 32)
-    tryAgainText = font2.render('Press a button to return to menu', True, (101, 67, 33))
-    screen.blit(tryAgainText, (150, 350))
 
 # To display the player's current HP in the top left
 def displayHP():
@@ -207,17 +204,6 @@ def winScreen():
     font = pygame.font.Font('freesansbold.ttf', 50)
     gameOverText = font.render('Nice Shots, you win!', True, (101, 67, 33))
     screen.blit(gameOverText, (150, 325))
-    font2 = pygame.font.Font('freesansbold.ttf', 32)
-    tryAgainText = font2.render('Press a button to return to menu', True, (101, 67, 33))
-    screen.blit(tryAgainText, (150, 350))
-
-def waitForKeyPress():
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == pygame.KEYDOWN:
-                return
 
 #game loop for window
 bullet = False
@@ -225,175 +211,67 @@ running = False
 in_menu = True
 in_options = False
 
-#runs the game
-while True:
-    playerHP = 3
-    score = 0
-    playerXChange = 0
-    playerYChange = 0
-    bullet = False
-    running = False
-    in_menu = True
-    in_options = False
+#Drawing the menu if in the menu
+while in_menu:
+    #make background white
+    #screen.fill((255, 255, 255))
+    screen.blit(background, (0, -80))
+
+    #stores mouse position
+    mouse = pygame.mouse.get_pos()
+
     for event in pygame.event.get():
 
-            #closing the window if red x is clicked
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
-    #Drawing the menu if in the menu
-    while in_menu:
-        #make background white
-        #screen.fill((255, 255, 255))
-        screen.blit(background, (0, -80))
+        #closing the window if red x is clicked
+        if event.type == pygame.QUIT:
+            running = False
+            pygame.quit()
 
-        #stores mouse position
-        mouse = pygame.mouse.get_pos()
+        #mouse interactions -- in progress
+        if event.type == pygame.MOUSEBUTTONDOWN:
+             #mouse controls on the menu
+             if in_menu:
+                if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
+                    running = False
+                    in_menu = False
+                    pygame.quit()
+                if 266.5 <= mouse[0] <= 533.5 and 350 <= mouse[1] <= 450:
+                    in_menu = False
+                    in_options = True
+                if 266.5 <= mouse[0] <= 533.5 and 200 <= mouse[1] <= 300:
+                    in_menu = False
+                    running = True
 
-        for event in pygame.event.get():
-
-            #closing the window if red x is clicked
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
-
-            #mouse interactions -- in progress
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                #mouse controls on the menu
-                if in_menu:
-                    if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
-                        running = False
-                        in_menu = False
-                        pygame.quit()
-                    if 266.5 <= mouse[0] <= 533.5 and 350 <= mouse[1] <= 450:
-                        in_menu = False
-                        in_options = True
-                    if 266.5 <= mouse[0] <= 533.5 and 200 <= mouse[1] <= 300:
-                        in_menu = False
-                        running = True
-
-            #drawing the buttons for the menu
-            #Quit button
-            quitbuttonrect.center = (400, 550)
-            screen.blit(quitbutton, quitbuttonrect)
-            #Options button
-            optionsbuttonrect.center = (400, 400)
-            screen.blit(optionsbutton, optionsbuttonrect)
-            #Play button
-            startbuttonrect.center = (400, 250)
-            screen.blit(startbutton, startbuttonrect)
-            #Title text
-            #screen.blit(text_title,titleRect)
-
-            pygame.display.update()
-
-    easy_mode = False
-    normal_mode = True
-    hard_mode = False
-    while in_options:
-        screen.blit(background, (0, -80))
-
-        #stores mouse position
-        mouse = pygame.mouse.get_pos()
-        for event in pygame.event.get():
-
-            #closing the window if red x is clicked
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                    #mouse controls on the menu
-                    if in_options:
-                        if 266.5 <= mouse[0] <= 533.5 and 125 <= mouse[1] <= 225:
-                            running = True
-                            in_options = False
-                        if 266.5 <= mouse[0] <= 533.5 and 250 <= mouse[1] <= 350:
-                            easy_mode = True
-                            enemy_spawn_rate = 600
-                            scoreToWin = 15
-                        if 266.5 <= mouse[0] <= 533.5 and 375 <= mouse[1] <= 475:
-                            normal_mode = True
-                            enemy_spawn_rate = 100
-                            scoreToWin = 20
-                        if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
-                            hard_mode = True
-                            enemy_spawn_rate = 30
-                            scoreToWin = 25
-                            #  
-                    
-        #Start Button
-        startbuttonrect.center = (400, 175)
+        #drawing the buttons for the menu
+        #Quit button
+        quitbuttonrect.center = (400, 550)
+        screen.blit(quitbutton, quitbuttonrect)
+        #Options button
+        optionsbuttonrect.center = (400, 400)
+        screen.blit(optionsbutton, optionsbuttonrect)
+        #Play button
+        startbuttonrect.center = (400, 250)
         screen.blit(startbutton, startbuttonrect)
-        #Easy Button
-        easybuttonrect.center = (400, 300)
-        screen.blit(easybutton, easybuttonrect)
-        #Normal button
-        normalbuttonrect.center = (400, 425)
-        screen.blit(normalbutton, normalbuttonrect)
-        #Hard button
-        hardbuttonrect.center = (400, 550)
-        screen.blit(hardbutton, hardbuttonrect)
+        #Title text
+        #screen.blit(text_title,titleRect)
 
         pygame.display.update()
 
+easy_mode = False
+normal_mode = True
+hard_mode = False
+while in_options:
+    screen.blit(background, (0, -80))
 
+    #stores mouse position
+    mouse = pygame.mouse.get_pos()
+    for event in pygame.event.get():
 
-<<<<<<< HEAD
-    while running:
-        #make background white
-        time = pygame.time.get_ticks()
-        clock.tick(FPS)
-        # Edited so that it spawns one new enemy every 10 secs
-        if time % enemy_spawn_rate == 0:
-            enemies.append(Enemy(600, 50))
-            enemy_group.add(enemies[len(enemies)-1])
-        enemy_group.update(time, screen)
-        bullet_group.update()
-        screen.blit(background, (0, -80))
-        #screen.fill((255, 255, 255))
+        #closing the window if red x is clicked
+        if event.type == pygame.QUIT:
+            running = False
+            pygame.quit()
 
-        #stores mouse position
-        mouse = pygame.mouse.get_pos()
-        if score >= scoreToWin:
-            bullet_group.empty()
-            enemy_group.empty()
-        bullet_group.draw(screen)
-        enemy_group.draw(screen)
-        for event in pygame.event.get():
-
-            #closing the window if red x is clicked
-            if event.type == pygame.QUIT:
-                running = False
-            # For Player Movement
-            if score < scoreToWin:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        playerXChange += -playerMoveSpeed
-                    if event.key == pygame.K_RIGHT:
-                        playerXChange += playerMoveSpeed
-                    if event.key == pygame.K_UP:
-                        playerYChange += -playerMoveSpeed
-                    if event.key == pygame.K_DOWN:
-                        playerYChange += playerMoveSpeed
-                    if event.key == pygame.K_SPACE and bulletState == 'ready':
-                        bulletX = playerX
-                        bulletY = playerY
-                        fireBullet(bulletX, bulletY)
-                elif event.type == pygame.KEYUP:
-                    #if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                    # playerXChange = 0
-                        #playerYChange = 0
-                    if event.key == pygame.K_LEFT:
-                        playerXChange -= -playerMoveSpeed
-                    if event.key == pygame.K_RIGHT:
-                        playerXChange -= playerMoveSpeed
-                    if event.key == pygame.K_UP:
-                        playerYChange -= -playerMoveSpeed
-                    if event.key == pygame.K_DOWN:
-                        playerYChange -= playerMoveSpeed
-                
-=======
         if event.type == pygame.MOUSEBUTTONDOWN:
                 #mouse controls on the menu
                 if in_options:
@@ -470,84 +348,102 @@ while running:
     bullet_group.draw(screen)
     enemy_group.draw(screen)
     for event in pygame.event.get():
->>>>>>> efdff686586aac4be82f1e3116837489f52ba026
 
-
-        #placeholder
-
-        # Player Movement
-        playerX += playerXChange
-        playerY += playerYChange
-
-        # BOUNDS FOR PLAYER
-        if playerX <= 0:
-            playerX = 0
-        elif playerX >= width-32:
-            playerX = 800-32
-
-        if playerY <= 100:
-            playerY = 100
-        elif playerY >= height-64:
-            playerY = height-64
-
-        # BULLETS FUNCTIONALITY
-        if bulletY <= 0:
-            bulletY = playerY
-            bulletState = 'ready'
-        if bulletState == 'fire':
-            fireBullet(bulletX, bulletY)
-            bulletY -= bulletYChange
-
-        # For collision on enemies, removes enemy from screen after shooting it
-        for i in range (len(enemies)):
-            if collision(bulletX, bulletY, enemies[i].rect.x, enemies[i].rect.y + 16):
-                enemy_group.remove(enemies[i])
-                enemies[i] = Enemy(900, -100)
-                bulletState = "ready"
-                bulletX = 0
-                bulletY = 0
-                score += 1
-        # Respawns 3 enemies if you kill all of them
-        if not enemy_group:
-            for i in range(3):
-                enemies[i] = Enemy(random.randint(64,800-64), random.randint(64,300))
-                enemy_group.add(enemies[i])
-
-
-        # For collision on player
-        for bullet in iter(bullet_group):
-            if collision(bullet.rect.x, bullet.rect.y, playerX, playerY):
-                playerHP -= 1
-                bullet_group.remove(bullet)
-
-        # To decide whether its game over or not
-        if playerHP <= 0:
-            gameOver()
-            playerX = 900
-            playerY = -100
-            pygame.display.update()
-            waitForKeyPress()
-            bullet = False
+        #closing the window if red x is clicked
+        if event.type == pygame.QUIT:
             running = False
-            in_menu = True
-            in_options = False
-        else:
-            player(playerX, playerY)
-            displayHP()
-        
-        
-        if score >= scoreToWin:
-            winScreen()
-            pygame.display.update()
-            waitForKeyPress()
-            bullet = False
-            running = False
-            in_menu = True
-            in_options = False
+        # For Player Movement
+        if score < scoreToWin:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    playerXChange += -playerMoveSpeed
+                if event.key == pygame.K_RIGHT:
+                    playerXChange += playerMoveSpeed
+                if event.key == pygame.K_UP:
+                    playerYChange += -playerMoveSpeed
+                if event.key == pygame.K_DOWN:
+                    playerYChange += playerMoveSpeed
+                if event.key == pygame.K_SPACE and bulletState == 'ready':
+                    bulletX = playerX
+                    bulletY = playerY
+                    fireBullet(bulletX, bulletY)
+            elif event.type == pygame.KEYUP:
+                #if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                # playerXChange = 0
+                    #playerYChange = 0
+                if event.key == pygame.K_LEFT:
+                    playerXChange -= -playerMoveSpeed
+                if event.key == pygame.K_RIGHT:
+                    playerXChange -= playerMoveSpeed
+                if event.key == pygame.K_UP:
+                    playerYChange -= -playerMoveSpeed
+                if event.key == pygame.K_DOWN:
+                    playerYChange -= playerMoveSpeed
+            
 
-        #display score
-        displayScore()
+
+    #placeholder
+
+    # Player Movement
+    playerX += playerXChange
+    playerY += playerYChange
+
+    # BOUNDS FOR PLAYER
+    if playerX <= 0:
+        playerX = 0
+    elif playerX >= width-32:
+        playerX = 800-32
+
+    if playerY <= 100:
+        playerY = 100
+    elif playerY >= height-64:
+        playerY = height-64
+
+    # BULLETS FUNCTIONALITY
+    if bulletY <= 0:
+        bulletY = playerY
+        bulletState = 'ready'
+    if bulletState == 'fire':
+        fireBullet(bulletX, bulletY)
+        bulletY -= bulletYChange
+
+    # For collision on enemies, removes enemy from screen after shooting it
+    for i in range (len(enemies)):
+        if collision(bulletX, bulletY, enemies[i].rect.x, enemies[i].rect.y + 16):
+            enemy_group.remove(enemies[i])
+            enemies[i] = Enemy(900, -100)
+            bulletState = "ready"
+            bulletX = 0
+            bulletY = 0
+            score += 1
+    # Respawns 3 enemies if you kill all of them
+    if not enemy_group:
+        for i in range(3):
+            enemies[i] = Enemy(random.randint(64,800-64), random.randint(64,300))
+            enemy_group.add(enemies[i])
+
+
+    # For collision on player
+    for bullet in iter(bullet_group):
+        if collision(bullet.rect.x, bullet.rect.y, playerX, playerY):
+            playerHP -= 1
+            bullet_group.remove(bullet)
+
+    # To decide whether its game over or not
+    if playerHP <= 0:
+        gameOver()
+        playerX = 900
+        playerY = -100
+    else:
+        player(playerX, playerY)
+        displayHP()
+    
+    
+    if score >= scoreToWin:
+        winScreen()
+    #display score
+    displayScore()
 
 
 
-        pygame.display.update()
+    pygame.display.update()

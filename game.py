@@ -469,3 +469,5 @@ while game_over:
             if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
                 in_menu = True
                 game_over = False
+
+    pygame.display.update()

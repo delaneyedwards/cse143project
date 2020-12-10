@@ -298,8 +298,8 @@ while True:
                             normal_mode = False
                             enemy_spawn_rate = 30
                             scoreToWin = 25
-                            #  
-                    
+                            #
+
         #Start Button
         startbuttonrect.center = (400, 175)
         screen.blit(startbutton, startbuttonrect)
@@ -382,7 +382,7 @@ while True:
                         playerYChange -= -playerMoveSpeed
                     if event.key == pygame.K_DOWN:
                         playerYChange -= playerMoveSpeed
-                
+
 
         # Player Movement
         playerX += playerXChange
@@ -439,8 +439,8 @@ while True:
         else:
             player(playerX, playerY)
             displayHP()
-        
-        
+
+
         if score >= scoreToWin:
             game_over = True
             win = True

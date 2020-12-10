@@ -36,7 +36,12 @@ normalbutton = pygame.image.load('normalbutton.png')
 normalbuttonrect = normalbutton.get_rect()
 hardbutton = pygame.image.load('hardbutton.png')
 hardbuttonrect = hardbutton.get_rect()
-
+darkeasybutton = pygame.image.load('darkeasybutton.png')
+darkeasybuttonrect = darkeasybutton.get_rect()
+darknormalbutton = pygame.image.load('darknormalbutton.png')
+darknormalbuttonrect = darknormalbutton.get_rect()
+darkhardbutton = pygame.image.load('darkhardbutton.png')
+darkhardbuttonrect = darkhardbutton.get_rect()
 #fonts and texts
 smallfont = pygame.font.SysFont('Corbel',35)
 largefont = pygame.font.SysFont('Corbel',65)
@@ -275,12 +280,18 @@ while in_options:
                         in_options = False
                     if 266.5 <= mouse[0] <= 533.5 and 250 <= mouse[1] <= 350:
                         easy_mode = True
+                        normal_mode = False
+                        hard_mode = False
                         enemy_spawn_rate = 600
                     if 266.5 <= mouse[0] <= 533.5 and 375 <= mouse[1] <= 475:
                         normal_mode = True
+                        easy_mode = False
+                        hard_mode = False
                         enemy_spawn_rate = 100
                     if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
                         hard_mode = True
+                        easy_mode = False
+                        normal_mode = False
                         enemy_spawn_rate = 30
                         #  
                 
@@ -288,14 +299,26 @@ while in_options:
     startbuttonrect.center = (400, 175)
     screen.blit(startbutton, startbuttonrect)
     #Easy Button
-    easybuttonrect.center = (400, 300)
-    screen.blit(easybutton, easybuttonrect)
+    if easy_mode:
+        darkeasybuttonrect.center = (400,300)
+        screen.blit(darkeasybutton, darkeasybuttonrect)
+    else:
+        easybuttonrect.center = (400, 300)
+        screen.blit(easybutton, easybuttonrect)
     #Normal button
-    normalbuttonrect.center = (400, 425)
-    screen.blit(normalbutton, normalbuttonrect)
+    if normal_mode:
+        darknormalbuttonrect.center = (400, 425)
+        screen.blit(darknormalbutton, darknormalbuttonrect)
+    else:
+        normalbuttonrect.center = (400, 425)
+        screen.blit(normalbutton, normalbuttonrect)
     #Hard button
-    hardbuttonrect.center = (400, 550)
-    screen.blit(hardbutton, hardbuttonrect)
+    if hard_mode:
+        darkhardbuttonrect.center = (400, 550)
+        screen.blit(darkhardbutton, darkhardbuttonrect)
+    else:
+        hardbuttonrect.center = (400, 550)
+        screen.blit(hardbutton, hardbuttonrect)
 
     pygame.display.update()
 

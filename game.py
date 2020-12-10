@@ -339,6 +339,7 @@ while True:
 
 
 
+<<<<<<< HEAD
     while running:
         #make background white
         time = pygame.time.get_ticks()
@@ -392,6 +393,7 @@ while True:
                     if event.key == pygame.K_DOWN:
                         playerYChange -= playerMoveSpeed
                 
+=======
         if event.type == pygame.MOUSEBUTTONDOWN:
                 #mouse controls on the menu
                 if in_options:
@@ -468,6 +470,7 @@ while running:
     bullet_group.draw(screen)
     enemy_group.draw(screen)
     for event in pygame.event.get():
+>>>>>>> efdff686586aac4be82f1e3116837489f52ba026
 
 
         #placeholder

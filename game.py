@@ -201,8 +201,6 @@ def winScreen():
     font = pygame.font.Font('freesansbold.ttf', 50)
     gameOverText = font.render('Nice Shots, you win!', True, (101, 67, 33))
     screen.blit(gameOverText, (150, 325))
-    playagainbuttonrect.center = (400, 550)
-    screen.blit(playagainbutton, playagainbuttonrect)
 
 #game loop for window
 bullet = False
@@ -433,15 +431,14 @@ while running:
         running = False
         playerX = 900
         playerY = -100
-    else:
-        player(playerX, playerY)
-        displayHP()
-    
-    
-    if score >= scoreToWin:
+    elif score >= scoreToWin:
         game_over = True
         win = True
         running = False
+    else:
+        player(playerX, playerY)
+        displayHP()
+
 
     #display score
     displayScore()
@@ -451,6 +448,8 @@ while running:
 while game_over:
     screen.blit(background, (0, -80))
 
+    playagainbuttonrect.center = (400, 550)
+    screen.blit(playagainbutton, playagainbuttonrect)
     #stores mouse position
     mouse = pygame.mouse.get_pos()
     if win:

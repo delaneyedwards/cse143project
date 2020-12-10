@@ -185,6 +185,8 @@ while True:
         font = pygame.font.Font('freesansbold.ttf', 64)
         gameOverText = font.render('You Died', True, (101, 67, 33))
         screen.blit(gameOverText, (250, 250))
+        playagainbuttonrect.center = (400, 550)
+        screen.blit(playagainbutton, playagainbuttonrect)
 
     # To display the player's current HP in the top left
     def displayHP():

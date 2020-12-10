@@ -9,3 +9,5 @@ When you open the game, you are greeted by the menu. Here there are three button
 Once you have entered gameplay, you will see your player character spawned on the bottom half of the screen. You can move around using the arrow keys on your keyboard. To shoot at the enemies, press space. Every robber/enemy that you hit, you earn one point. However, if you get hit, you lose HP. If you get hit 3 times but enemy bullets, you die. Remember, the faster you kill enemies, the less you have to deal with. If you wait around, more will spawn. The win condition is based on the number of enemies you kill in each mode. In easy mode you have to shoot 15 enemies, in normal you have to shoot 20, and in hard you have to shoot 25. 
 
 Once you have died, or killed enough enemies to win, you will be taken to the game over screen. Here you can click back to return to the game menu.
+
+Link to the short video: https://youtu.be/itbq54WEyM4

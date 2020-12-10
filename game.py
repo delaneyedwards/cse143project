@@ -236,11 +236,10 @@ while True:
     in_menu = True
     in_options = False
     for event in pygame.event.get():
+        #closing the window if red x is clicked
+        if event.type == pygame.QUIT:
+            pygame.quit()
 
-            #closing the window if red x is clicked
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
     #Drawing the menu if in the menu
     while in_menu:
         #make background white
@@ -272,20 +271,20 @@ while True:
                         in_menu = False
                         running = True
 
-            #drawing the buttons for the menu
-            #Quit button
-            quitbuttonrect.center = (400, 550)
-            screen.blit(quitbutton, quitbuttonrect)
-            #Options button
-            optionsbuttonrect.center = (400, 400)
-            screen.blit(optionsbutton, optionsbuttonrect)
-            #Play button
-            startbuttonrect.center = (400, 250)
-            screen.blit(startbutton, startbuttonrect)
-            #Title text
-            #screen.blit(text_title,titleRect)
+        #drawing the buttons for the menu
+        #Quit button
+        quitbuttonrect.center = (400, 550)
+        screen.blit(quitbutton, quitbuttonrect)
+        #Options button
+        optionsbuttonrect.center = (400, 400)
+        screen.blit(optionsbutton, optionsbuttonrect)
+        #Play button
+        startbuttonrect.center = (400, 250)
+        screen.blit(startbutton, startbuttonrect)
+        #Title text
+        #screen.blit(text_title,titleRect)
 
-            pygame.display.update()
+        pygame.display.update()
 
     easy_mode = False
     normal_mode = True
@@ -303,24 +302,24 @@ while True:
                 pygame.quit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                    #mouse controls on the menu
-                    if in_options:
-                        if 266.5 <= mouse[0] <= 533.5 and 125 <= mouse[1] <= 225:
-                            running = True
-                            in_options = False
-                        if 266.5 <= mouse[0] <= 533.5 and 250 <= mouse[1] <= 350:
-                            easy_mode = True
-                            enemy_spawn_rate = 600
-                            scoreToWin = 15
-                        if 266.5 <= mouse[0] <= 533.5 and 375 <= mouse[1] <= 475:
-                            normal_mode = True
-                            enemy_spawn_rate = 100
-                            scoreToWin = 20
-                        if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
-                            hard_mode = True
-                            enemy_spawn_rate = 30
-                            scoreToWin = 25
-                            #  
+                #mouse controls on the menu
+                if in_options:
+                    if 266.5 <= mouse[0] <= 533.5 and 125 <= mouse[1] <= 225:
+                        running = True
+                        in_options = False
+                    if 266.5 <= mouse[0] <= 533.5 and 250 <= mouse[1] <= 350:
+                        easy_mode = True
+                        enemy_spawn_rate = 600
+                        scoreToWin = 15
+                    if 266.5 <= mouse[0] <= 533.5 and 375 <= mouse[1] <= 475:
+                        normal_mode = True
+                        enemy_spawn_rate = 100
+                        scoreToWin = 20
+                    if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
+                        hard_mode = True
+                        enemy_spawn_rate = 30
+                        scoreToWin = 25
+                        #  
                     
         #Start Button
         startbuttonrect.center = (400, 175)
@@ -335,7 +334,33 @@ while True:
         hardbuttonrect.center = (400, 550)
         screen.blit(hardbutton, hardbuttonrect)
 
-        pygame.display.update()
+        #Start Button
+        startbuttonrect.center = (400, 175)
+        screen.blit(startbutton, startbuttonrect)
+        #Easy Button
+        if easy_mode:
+            darkeasybuttonrect.center = (400,300)
+            screen.blit(darkeasybutton, darkeasybuttonrect)
+        else:
+            easybuttonrect.center = (400, 300)
+            screen.blit(easybutton, easybuttonrect)
+        #Normal button
+        if normal_mode:
+            darknormalbuttonrect.center = (400, 425)
+            screen.blit(darknormalbutton, darknormalbuttonrect)
+        else:
+            normalbuttonrect.center = (400, 425)
+            screen.blit(normalbutton, normalbuttonrect)
+        #Hard button
+        if hard_mode:
+            darkhardbuttonrect.center = (400, 550)
+            screen.blit(darkhardbutton, darkhardbuttonrect)
+        else:
+            hardbuttonrect.center = (400, 550)
+            screen.blit(hardbutton, hardbuttonrect)
+
+    pygame.display.update()
+
 
 
 
@@ -379,7 +404,7 @@ while True:
                         bulletX = playerX
                         bulletY = playerY
                         fireBullet(bulletX, bulletY)
-                elif event.type == pygame.KEYUP:
+                if event.type == pygame.KEYUP:
                     #if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     # playerXChange = 0
                         #playerYChange = 0
@@ -391,32 +416,8 @@ while True:
                         playerYChange -= -playerMoveSpeed
                     if event.key == pygame.K_DOWN:
                         playerYChange -= playerMoveSpeed
-                
-        if event.type == pygame.MOUSEBUTTONDOWN:
-                #mouse controls on the menu
-                if in_options:
-                    if 266.5 <= mouse[0] <= 533.5 and 125 <= mouse[1] <= 225:
-                        running = True
-                        in_options = False
-                    if 266.5 <= mouse[0] <= 533.5 and 250 <= mouse[1] <= 350:
-                        easy_mode = True
-                        normal_mode = False
-                        hard_mode = False
-                        enemy_spawn_rate = 600
-                        scoreToWin = 15
-                    if 266.5 <= mouse[0] <= 533.5 and 375 <= mouse[1] <= 475:
-                        normal_mode = True
-                        easy_mode = False
-                        hard_mode = False
-                        enemy_spawn_rate = 100
-                        scoreToWin = 20
-                    if 266.5 <= mouse[0] <= 533.5 and 500 <= mouse[1] <= 600:
-                        hard_mode = True
-                        easy_mode = False
-                        normal_mode = False
-                        enemy_spawn_rate = 30
-                        scoreToWin = 25
-                        #  
+
+        pygame.display.update()
                 
     #Start Button
     startbuttonrect.center = (400, 175)
@@ -443,7 +444,7 @@ while True:
         hardbuttonrect.center = (400, 550)
         screen.blit(hardbutton, hardbuttonrect)
 
-    pygame.display.update()
+    #pygame.display.update()
 
 
 
